@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Sanskar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #chat-container {
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        #chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background: #fafafa;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            margin: 10px 0;
+        }
+
+        .user-message {
+            text-align: right;
+            color: blue;
+        }
+
+        .gpt-message {
+            text-align: left;
+            color: green;
+        }
+
+        #input-container {
+            display: flex;
+        }
+
+        #input-box {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+
+        #send-btn {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #send-btn:hover {
+            background-color: #003d80;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Ask Sanskar</h2>
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="input-box" placeholder="Type your question..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById("chat-box");
+        const inputBox = document.getElementById("input-box");
+        const sendBtn = document.getElementById("send-btn");
+
+        function addMessage(sender, text) {
+            const message = document.createElement("div");
+            message.className = "message";
+            message.classList.add(sender === "User" ? "user-message" : "gpt-message");
+            message.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userInput = inputBox.value.trim();
+            if (!userInput) return;
+
+            addMessage("User", userInput);
+            inputBox.value = "";
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userInput })
+                });
+
+                const data = await response.json();
+                addMessage("GPT", data.response || "Sorry, I couldn't process that. Try again.");
+            } catch (error) {
+                addMessage("GPT", "Error: Unable to fetch response. Please try again later.");
+                console.error("Error:", error);
+            }
+        }
+
+        sendBtn.addEventListener("click", sendMessage);
+        inputBox.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    </script>
+</body>
+</html>
