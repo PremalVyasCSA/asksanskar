@@ -15,7 +15,7 @@ exports.handler = async (event) => {
             console.log("Prompt Received:", prompt);
 
             const completion = await openai.completions.create({
-                model: "text-davinci-003",  // Use "gpt-4" if you have access
+                model: "gpt-4o",  // Use "gpt-4" if you have access
                 prompt,
                 max_tokens: 150
             });
