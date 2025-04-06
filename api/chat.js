@@ -17,7 +17,10 @@ exports.handler = async (event) => {
             // ✅ Changed from `completions.create` to `chat.completions.create`
             const completion = await openai.chat.completions.create({
                 model: "gpt-4",  // Use "gpt-4" or "gpt-3.5-turbo" if you have access
-                messages: [{ role: "user", content: prompt }],
+                messages: [
+                    { role: "system", content: "You are an expert on Hinduism/ Sanatan Dharma. Answer questions that are related to Hinduism/ Sanatan Dharma only. Politely refuse to answer any other questions. Do not make assumptions. Keep the language of reply simple and easy to be understood by youth and children. Instead of the word Hinduism, use Sanatan Dharm." },
+                    { role: "user", content: prompt }
+                ],
                 max_tokens: 150
             });
 
