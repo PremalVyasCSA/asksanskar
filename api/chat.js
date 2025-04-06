@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
         try {
             const completion = await openai.createCompletion({
-                model: "gpt-4o",  // Or "gpt-4" if you have access
+                model: "gpt-4o",
                 prompt,
                 max_tokens: 150
             });
