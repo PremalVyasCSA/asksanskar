@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Sanskar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #chat-container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Ask Sanskar</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="input-box" placeholder="Ask a question...">
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script>
+        const inputBox = document.getElementById("input-box");
+        const sendBtn = document.getElementById("send-btn");
+
+        async function sendMessage() {
+            const userInput = inputBox.value.trim();
+            if (!userInput) return;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userInput })
+                });
+
+                const data = await response.json();
+                alert(data.response || "Sorry, something went wrong.");
+            } catch (error) {
+                alert("Error: Unable to fetch response. Please try again later.");
+            }
+        }
+
+        sendBtn.addEventListener("click", sendMessage);
+    </script>
+</body>
+</html>
