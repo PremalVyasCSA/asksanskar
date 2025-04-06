@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require("openai");
+import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -6,24 +6,23 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-exports.handler = async (event) => {
-    console.log("Received Request");  // Log incoming request
+export async function handler(event) {
+    console.log("Received Request");
 
     if (event.httpMethod === 'POST') {
-        console.log("Processing POST request");  // Log request type
+        console.log("Processing POST request");
 
         const { prompt } = JSON.parse(event.body);
-
-        console.log("Prompt Received:", prompt);  // Log the received prompt
+        console.log("Prompt Received:", prompt);
 
         try {
             const completion = await openai.createCompletion({
-                model: "text-davinci-003",  // Use "gpt-4" if you have access
+                model: "text-davinci-003",
                 prompt,
                 max_tokens: 150
             });
 
-            console.log("Completion Received:", completion.data.choices[0].text.trim());  // Log the completion text
+            console.log("Completion Received:", completion.data.choices[0].text.trim());
 
             return {
                 statusCode: 200,
@@ -37,7 +36,6 @@ exports.handler = async (event) => {
             };
         }
     } else {
-        console.log("Method Not Allowed");  // Log invalid request method
         return {
             statusCode: 405,
             body: JSON.stringify({ response: 'Method Not Allowed' })
