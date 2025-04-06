@@ -1,7 +1,13 @@
 [build]
   functions = "api"
+  publish = "."  # Ensures Netlify serves static files from the root directory
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
