@@ -6,23 +6,32 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-module.exports = async (req, res) => {
-    if (req.method === 'POST') {
-        const { prompt } = req.body;
+exports.handler = async (event) => {
+    if (event.httpMethod === 'POST') {
+        const { prompt } = JSON.parse(event.body);
 
         try {
             const completion = await openai.createCompletion({
-                model: "text-davinci-003",  // Or "gpt-4" if you have access
+                model: "gpt-4o",  // Or "gpt-4" if you have access
                 prompt,
                 max_tokens: 150
             });
 
-            res.status(200).json({ response: completion.data.choices[0].text.trim() });
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ response: completion.data.choices[0].text.trim() })
+            };
         } catch (error) {
             console.error("Error with OpenAI API:", error.response?.data || error.message);
-            res.status(500).json({ response: "Error generating response." });
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ response: "Error generating response." })
+            };
         }
     } else {
-        res.status(405).json({ response: 'Method Not Allowed' });
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ response: 'Method Not Allowed' })
+        };
     }
 }
