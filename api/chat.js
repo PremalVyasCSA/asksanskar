@@ -1,10 +1,8 @@
-const openai = require("openai");
+const OpenAI = require("openai");
 
-const configuration = new openai.Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
 });
-
-const openaiApi = new openai.OpenAIApi(configuration);
 
 exports.handler = async (event) => {
     console.log("Received Request");
@@ -16,17 +14,17 @@ exports.handler = async (event) => {
             const { prompt } = JSON.parse(event.body);
             console.log("Prompt Received:", prompt);
 
-            const completion = await openaiApi.createCompletion({
+            const completion = await openai.completions.create({
                 model: "text-davinci-003",  // Use "gpt-4" if you have access
                 prompt,
                 max_tokens: 150
             });
 
-            console.log("Completion Received:", completion.data.choices[0].text.trim());
+            console.log("Completion Received:", completion.choices[0].text.trim());
 
             return {
                 statusCode: 200,
-                body: JSON.stringify({ response: completion.data.choices[0].text.trim() })
+                body: JSON.stringify({ response: completion.choices[0].text.trim() })
             };
         } catch (error) {
             console.error("Error with OpenAI API:", error.response?.data || error.message);
