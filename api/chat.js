@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -6,18 +6,18 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export async function handler(event) {
+exports.handler = async (event) => {
     console.log("Received Request");
 
     if (event.httpMethod === 'POST') {
         console.log("Processing POST request");
 
-        const { prompt } = JSON.parse(event.body);
-        console.log("Prompt Received:", prompt);
-
         try {
+            const { prompt } = JSON.parse(event.body);
+            console.log("Prompt Received:", prompt);
+
             const completion = await openai.createCompletion({
-                model: "text-davinci-003",
+                model: "text-davinci-003",  // Use "gpt-4" if you have access
                 prompt,
                 max_tokens: 150
             });
