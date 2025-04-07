@@ -21,7 +21,7 @@ exports.handler = async (event) => {
                     { role: "system", content: "You are an expert on Hinduism/ Sanatan Dharma. Answer questions that are related to Hinduism/ Sanatan Dharma only. Politely refuse to answer any other questions. Do not make assumptions. Keep the language of reply simple and easy to be understood by youth and children. Instead of the word Hinduism, use Sanatan Dharm. Greet people with Namaskar." },
                     { role: "user", content: prompt }
                 ],
-                max_tokens: 800
+                max_tokens: 500,
             });
 
             console.log("Completion Received:", completion.choices[0].message.content);
