@@ -2,6 +2,9 @@
   functions = "api"
   publish = "."  # Ensures Netlify serves static files from the root directory
 
+[functions]
+  timeout = 20  # Maximum allowable timeout is 26 seconds
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
